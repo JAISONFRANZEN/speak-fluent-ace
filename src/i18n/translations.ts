@@ -273,6 +273,6 @@ export const translations = {
       minutes: "min",
     },
   },
-} as const;
+};
 
 export type TranslationKey = typeof translations.pt;
