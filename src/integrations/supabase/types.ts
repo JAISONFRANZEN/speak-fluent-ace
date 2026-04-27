@@ -14,7 +14,215 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      exam_images: {
+        Row: {
+          created_at: string
+          description_de: string
+          description_pt: string
+          difficulty: string
+          id: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          description_de: string
+          description_pt: string
+          difficulty?: string
+          id?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          description_de?: string
+          description_pt?: string
+          difficulty?: string
+          id?: string
+          url?: string
+        }
+        Relationships: []
+      }
+      exam_recordings: {
+        Row: {
+          created_at: string
+          duration_sec: number | null
+          id: string
+          part: number
+          part_feedback: Json | null
+          session_id: string
+          storage_path: string
+          transcript: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          duration_sec?: number | null
+          id?: string
+          part: number
+          part_feedback?: Json | null
+          session_id: string
+          storage_path: string
+          transcript?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          duration_sec?: number | null
+          id?: string
+          part?: number
+          part_feedback?: Json | null
+          session_id?: string
+          storage_path?: string
+          transcript?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exam_recordings_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "exam_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exam_sessions: {
+        Row: {
+          completed_at: string | null
+          feedback: Json | null
+          id: string
+          image_id: string | null
+          mode: string
+          notes: string | null
+          scores: Json | null
+          started_at: string
+          status: string
+          theme_id: string | null
+          total_score: number | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          feedback?: Json | null
+          id?: string
+          image_id?: string | null
+          mode?: string
+          notes?: string | null
+          scores?: Json | null
+          started_at?: string
+          status?: string
+          theme_id?: string | null
+          total_score?: number | null
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          feedback?: Json | null
+          id?: string
+          image_id?: string | null
+          mode?: string
+          notes?: string | null
+          scores?: Json | null
+          started_at?: string
+          status?: string
+          theme_id?: string | null
+          total_score?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exam_sessions_image_id_fkey"
+            columns: ["image_id"]
+            isOneToOne: false
+            referencedRelation: "exam_images"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "exam_sessions_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "exam_themes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exam_themes: {
+        Row: {
+          created_at: string
+          description_de: string
+          description_pt: string
+          difficulty: string
+          discussion_questions_de: string[]
+          discussion_questions_pt: string[]
+          id: string
+          redemittel: string[]
+          tips_de: string[]
+          tips_pt: string[]
+          title_de: string
+          title_pt: string
+        }
+        Insert: {
+          created_at?: string
+          description_de: string
+          description_pt: string
+          difficulty?: string
+          discussion_questions_de?: string[]
+          discussion_questions_pt?: string[]
+          id?: string
+          redemittel?: string[]
+          tips_de?: string[]
+          tips_pt?: string[]
+          title_de: string
+          title_pt: string
+        }
+        Update: {
+          created_at?: string
+          description_de?: string
+          description_pt?: string
+          difficulty?: string
+          discussion_questions_de?: string[]
+          discussion_questions_pt?: string[]
+          id?: string
+          redemittel?: string[]
+          tips_de?: string[]
+          tips_pt?: string[]
+          title_de?: string
+          title_pt?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          consent_at: string | null
+          consent_marketing: boolean
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          updated_at: string
+          whatsapp: string
+        }
+        Insert: {
+          consent_at?: string | null
+          consent_marketing?: boolean
+          created_at?: string
+          email: string
+          full_name: string
+          id: string
+          updated_at?: string
+          whatsapp: string
+        }
+        Update: {
+          consent_at?: string | null
+          consent_marketing?: boolean
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          updated_at?: string
+          whatsapp?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
