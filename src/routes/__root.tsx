@@ -41,7 +41,7 @@ export const Route = createRootRoute({
           "Plataforma interativa que simula a prova oral B1 do Goethe-Institut. Cronômetro real, gravação de vídeo e feedback automático com IA.",
       },
       { name: "author", content: "#SemLacunas" },
-      { property: "og:title", content: "Simulador de Prova B1 Sob Pressão" },
+      { property: "og:title", content: "Simulador de Prova B1 Sob Pressão — Goethe-Institut" },
       {
         property: "og:description",
         content:
@@ -49,6 +49,12 @@ export const Route = createRootRoute({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Simulador de Prova B1 Sob Pressão — Goethe-Institut" },
+      { name: "description", content: "B1 Exam Master simulates the Goethe-Institut B1 oral exam, offering timed practice and instant feedback." },
+      { property: "og:description", content: "B1 Exam Master simulates the Goethe-Institut B1 oral exam, offering timed practice and instant feedback." },
+      { name: "twitter:description", content: "B1 Exam Master simulates the Goethe-Institut B1 oral exam, offering timed practice and instant feedback." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/fa3c2cde-6ac9-439a-b7aa-ffe49b0ae759/id-preview-5ee5edd7--8b66636e-77cc-4107-9ee9-867c0f1d3b91.lovable.app-1777288189935.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/fa3c2cde-6ac9-439a-b7aa-ffe49b0ae759/id-preview-5ee5edd7--8b66636e-77cc-4107-9ee9-867c0f1d3b91.lovable.app-1777288189935.png" },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
   }),
