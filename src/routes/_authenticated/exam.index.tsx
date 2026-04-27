@@ -43,10 +43,7 @@ function ExamModeSelect() {
             type="button"
             disabled={m.key !== "completa"}
             onClick={() => {
-              if (m.key === "completa") {
-                // Will be implemented in next iteration
-                alert("Em breve!");
-              }
+              if (m.key === "completa") navigate({ to: "/exam/run" });
             }}
             className={`group rounded-2xl border p-6 text-left transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
               m.featured
