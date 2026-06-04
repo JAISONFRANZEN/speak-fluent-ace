@@ -1,9 +1,7 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Award, Clock, Sparkles, FileText, Languages, ArrowRight } from "lucide-react";
-import { useEffect } from "react";
 import { useI18n } from "@/i18n/I18nProvider";
-import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/SiteHeader";
 
@@ -13,12 +11,8 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const { t } = useI18n();
-  const { user, loading } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!loading && user) navigate({ to: "/dashboard" });
-  }, [user, loading, navigate]);
 
   return (
     <div className="min-h-screen bg-background">
