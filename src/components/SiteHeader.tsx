@@ -24,16 +24,16 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-md bg-gold text-gold-foreground">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-3 sm:px-4">
+        <Link to="/" className="flex min-w-0 items-center gap-2">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-gold text-gold-foreground">
             <Award className="h-5 w-5" />
           </span>
-          <span className="font-display text-base font-bold tracking-tight">
+          <span className="truncate font-display text-sm font-bold tracking-tight sm:text-base">
             {t.appName}
           </span>
         </Link>
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <LangToggle />
           {user ? (
             <>

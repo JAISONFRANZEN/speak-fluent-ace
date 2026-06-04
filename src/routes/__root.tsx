@@ -59,7 +59,12 @@ export const Route = createRootRoute({
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/fa3c2cde-6ac9-439a-b7aa-ffe49b0ae759/id-preview-5ee5edd7--8b66636e-77cc-4107-9ee9-867c0f1d3b91.lovable.app-1777288189935.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/fa3c2cde-6ac9-439a-b7aa-ffe49b0ae759/id-preview-5ee5edd7--8b66636e-77cc-4107-9ee9-867c0f1d3b91.lovable.app-1777288189935.png" },
     ],
-    links: [{ rel: "stylesheet", href: appCss }],
+    links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap" },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
