@@ -49,20 +49,14 @@ function Index() {
               <div className="mt-10 flex flex-wrap justify-center gap-3">
                 <Button
                   size="lg"
-                  onClick={() => navigate({ to: "/signup" })}
+                  onClick={() => navigate({ to: "/dashboard" })}
                   className="bg-gold text-gold-foreground shadow-[var(--shadow-gold)] hover:bg-gold/90"
                 >
-                  {t.cta.signup}
+                  Começar agora
                   <ArrowRight className="ml-1 h-4 w-4" />
                 </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  onClick={() => navigate({ to: "/login" })}
-                >
-                  {t.cta.login}
-                </Button>
               </div>
+
             </motion.div>
           </div>
         </section>
