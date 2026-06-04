@@ -1,9 +1,7 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Award, Clock, Sparkles, FileText, Languages, ArrowRight } from "lucide-react";
-import { useEffect } from "react";
 import { useI18n } from "@/i18n/I18nProvider";
-import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/SiteHeader";
 
@@ -13,12 +11,8 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const { t } = useI18n();
-  const { user, loading } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!loading && user) navigate({ to: "/dashboard" });
-  }, [user, loading, navigate]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -55,20 +49,14 @@ function Index() {
               <div className="mt-10 flex flex-wrap justify-center gap-3">
                 <Button
                   size="lg"
-                  onClick={() => navigate({ to: "/signup" })}
+                  onClick={() => navigate({ to: "/dashboard" })}
                   className="bg-gold text-gold-foreground shadow-[var(--shadow-gold)] hover:bg-gold/90"
                 >
-                  {t.cta.signup}
+                  Começar agora
                   <ArrowRight className="ml-1 h-4 w-4" />
                 </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  onClick={() => navigate({ to: "/login" })}
-                >
-                  {t.cta.login}
-                </Button>
               </div>
+
             </motion.div>
           </div>
         </section>
@@ -109,15 +97,16 @@ function Index() {
           </h2>
           <Button
             size="lg"
-            onClick={() => navigate({ to: "/signup" })}
+            onClick={() => navigate({ to: "/dashboard" })}
             className="mt-8 bg-gold text-gold-foreground hover:bg-gold/90"
           >
             <Award className="mr-2 h-5 w-5" />
-            {t.cta.signup}
+            Começar agora
           </Button>
           <p className="mt-4 text-xs text-muted-foreground">
-            Acesso vitalício · Sem cobrança
+            Acesso livre · Sem cadastro
           </p>
+
         </section>
       </main>
 
