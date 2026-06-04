@@ -1,66 +1,56 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, RotateCcw, Shuffle, Lightbulb } from "lucide-react";
+import {
+  Bell,
+  BellOff,
+  ChevronLeft,
+  ChevronRight,
+  Lightbulb,
+  RotateCcw,
+  Shuffle,
+  Sparkles,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { toast } from "sonner";
+import { ALL_IDS, CARDS, LEVEL_COLORS, type CardLevel } from "@/lib/flashcards";
+import { dueCards, getStats, todayStats } from "@/lib/srs";
+import { getPref, permissionState, requestPermission, setPref } from "@/lib/reminders";
 
 export const Route = createFileRoute("/_authenticated/karteikarten")({
   component: KarteikartenPage,
   head: () => ({
     meta: [
       { title: "Karteikarten — Simulador B1" },
-      { name: "description", content: "25 Karteikarten zur Grammatik für die Goethe B1 Prüfung." },
+      {
+        name: "description",
+        content: "25 Karteikarten zur Grammatik für die Goethe B1 Prüfung mit Spaced Repetition.",
+      },
     ],
   }),
 });
 
-type Level = "Einfach" | "Mittel" | "Schwer";
-
-interface Card {
-  id: number;
-  level: Level;
-  q: string;
-  a: string;
-}
-
-const CARDS: Card[] = [
-  // Einfach
-  { id: 1, level: "Einfach", q: "Como se forma o Partizip II dos verbos fracos (regulares)?", a: "Prefixo ge- + radical + sufixo -t (ex: gemacht)." },
-  { id: 2, level: "Einfach", q: "Qual é a principal diferença entre weil e denn na posição do verbo?", a: "Weil é subordinativa (verbo vai para o final); denn é coordenativa (verbo fica na 2ª posição)." },
-  { id: 3, level: "Einfach", q: "Quais são os artigos definidos no Nominativ para Masculino, Feminino, Neutro e Plural?", a: "der, die, das, die." },
-  { id: 4, level: "Einfach", q: "Como se diz \"Eu gostaria de...\" usando o verbo mögen no Konjunktiv II?", a: "Ich möchte..." },
-  { id: 5, level: "Einfach", q: "Qual caso a preposição mit sempre exige?", a: "Dativo." },
-  { id: 6, level: "Einfach", q: "Qual é o comparativo de gut?", a: "besser." },
-  { id: 7, level: "Einfach", q: "Como se conjuga o verbo können na 1ª pessoa do singular (Ich)?", a: "Ich kann." },
-  { id: 8, level: "Einfach", q: "Qual o superlativo de viel?", a: "am meisten." },
-  { id: 9, level: "Einfach", q: "O que acontece com o verbo na frase quando usamos a conjunção aber?", a: "O verbo permanece na 2ª posição (não há mudança de ordem)." },
-  { id: 10, level: "Einfach", q: "Como se diz \"Eu vou para casa\" em alemão?", a: "Ich gehe nach Hause." },
-  // Mittel
-  { id: 11, level: "Mittel", q: "Qual a regra de formação do Passiv Präsens?", a: "Verbo werden (conjugado) + Partizip II." },
-  { id: 12, level: "Mittel", q: "O que é a N-Deklination e a quais substantivos geralmente se aplica?", a: "É a adição de -n ou -en a substantivos masculinos (ex: Student, Polizist) em todos os casos, exceto o Nominativ." },
-  { id: 13, level: "Mittel", q: "Qual a diferença de uso entre als e wenn para eventos passados?", a: "Als para um evento único no passado; wenn para eventos repetitivos (sempre que/toda vez que)." },
-  { id: 14, level: "Mittel", q: "Como se forma o imperativo para a 2ª pessoa do plural (ihr)?", a: "Apenas o verbo conjugado no presente (sem o pronome 'ihr'). Ex: Macht!" },
-  { id: 15, level: "Mittel", q: "Quais são as Wechselpräpositionen (dupla regência) que exigem Dativo quando indicam localização?", a: "an, auf, hinter, in, neben, über, unter, vor, zwischen." },
-  { id: 16, level: "Mittel", q: "O que indica o Konjunktiv II quando usado com verbos como würden?", a: "Situações hipotéticas, irreais ou pedidos muito polidos." },
-  { id: 17, level: "Mittel", q: "Complete: \"Ich erinnere mich ____ den Urlaub.\" (Preposição correta)", a: "an." },
-  { id: 18, level: "Mittel", q: "Qual é a forma do pronome relativo no Nominativ para um substantivo masculino?", a: "der." },
-  { id: 19, level: "Mittel", q: "O que é o Zustandspassiv (Passivo de estado) e qual auxiliar utiliza?", a: "Indica um estado resultante de uma ação concluída; usa o auxiliar sein." },
-  { id: 20, level: "Mittel", q: "Quando o verbo modal sollen é usado no Konjunktiv II (sollte), qual é o seu sentido?", a: "Expressar um conselho ou recomendação." },
-  // Schwer
-  { id: 21, level: "Schwer", q: "Qual a diferença entre dass (conjunção) e das (artigo/pronome)?", a: "Dass introduz uma oração subordinada (conjunção); das é artigo definido neutro ou pronome relativo/demonstrativo." },
-  { id: 22, level: "Schwer", q: "Como se forma o Genitiv para substantivos masculinos e neutros?", a: "Adiciona-se o sufixo -s ou -es ao substantivo e o artigo altera-se para des." },
-  { id: 23, level: "Schwer", q: "Transforme para Passivo: \"Er schreibt einen Brief.\"", a: "Ein Brief wird geschrieben." },
-  { id: 24, level: "Schwer", q: "Qual a diferença entre während (como conjunção) e während (como preposição)?", a: "Como conjunção, rege oração subordinada (verbo no final); como preposição, rege sempre o Genitiv." },
-  { id: 25, level: "Schwer", q: "O que caracteriza o Perfekt dos verbos modais (müssen, können, etc.) quando acompanhados de um verbo principal no infinitivo?", a: "Forma-se o Ersatzinfinitiv: haben + infinitivo modal + infinitivo principal (ex: Ich habe das machen müssen)." },
-];
-
-const LEVELS: ("Alle" | Level)[] = ["Alle", "Einfach", "Mittel", "Schwer"];
+const LEVELS: ("Alle" | CardLevel)[] = ["Alle", "Einfach", "Mittel", "Schwer"];
 
 function KarteikartenPage() {
-  const [filter, setFilter] = useState<"Alle" | Level>("Alle");
+  const [filter, setFilter] = useState<"Alle" | CardLevel>("Alle");
   const [order, setOrder] = useState<number[]>(() => CARDS.map((_, i) => i));
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
+  const [due, setDue] = useState(0);
+  const [stats, setStats] = useState(() => todayStats());
+
+  useEffect(() => {
+    const refresh = () => {
+      setDue(dueCards(ALL_IDS).length);
+      setStats(todayStats());
+    };
+    refresh();
+    const id = window.setInterval(refresh, 30_000);
+    return () => window.clearInterval(id);
+  }, []);
 
   const filtered = useMemo(
     () => order.filter((i) => filter === "Alle" || CARDS[i].level === filter),
@@ -72,10 +62,7 @@ function KarteikartenPage() {
 
   function go(delta: number) {
     setFlipped(false);
-    setIndex((i) => {
-      const n = (i + delta + total) % total;
-      return n;
-    });
+    setIndex((i) => (i + delta + total) % total);
   }
   function shuffle() {
     setOrder((arr) => [...arr].sort(() => Math.random() - 0.5));
@@ -88,15 +75,11 @@ function KarteikartenPage() {
     setFlipped(false);
   }
 
-  const levelColor: Record<Level, string> = {
-    Einfach: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
-    Mittel: "bg-amber-500/15 text-amber-400 border-amber-500/30",
-    Schwer: "bg-rose-500/15 text-rose-400 border-rose-500/30",
-  };
+  const last7 = getStats().slice(-7);
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-10">
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <h1 className="font-display text-3xl font-extrabold tracking-tight">Karteikarten</h1>
         <span className="rounded-md border border-gold/30 bg-gold/10 px-2 py-0.5 text-xs font-semibold text-gold">
           B1 Grammatik
@@ -114,6 +97,68 @@ function KarteikartenPage() {
           antes de virar o cartão!
         </p>
       </div>
+
+      {/* SRS panel */}
+      <section className="mt-5 grid gap-3 sm:grid-cols-3">
+        <div className="rounded-xl border border-border bg-card p-4">
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Fällig heute / Devidos
+          </p>
+          <p className="mt-1 font-display text-3xl font-extrabold text-gold">{due}</p>
+        </div>
+        <div className="rounded-xl border border-border bg-card p-4">
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Hoje revisados
+          </p>
+          <p className="mt-1 font-display text-3xl font-extrabold">
+            {stats.reviewed}
+            <span className="ml-1 text-sm font-normal text-muted-foreground">
+              ({stats.reviewed > 0 ? Math.round((stats.correct / stats.reviewed) * 100) : 0}%)
+            </span>
+          </p>
+        </div>
+        <Link
+          to="/review"
+          className="group flex flex-col justify-between rounded-xl border border-gold bg-gold/10 p-4 transition-all hover:bg-gold/20 hover:shadow-[var(--shadow-gold)]"
+        >
+          <p className="text-xs font-semibold uppercase tracking-wider text-gold">
+            Modo Repetição Espaçada
+          </p>
+          <p className="mt-1 flex items-center gap-2 font-display text-lg font-bold">
+            <Sparkles className="h-5 w-5 text-gold" />
+            Iniciar revisão
+            <ChevronRight className="ml-auto h-5 w-5 transition-transform group-hover:translate-x-1" />
+          </p>
+        </Link>
+      </section>
+
+      <ReminderSettings dueCount={due} />
+
+      {/* 7-day mini chart */}
+      {last7.length > 0 && (
+        <section className="mt-5 rounded-xl border border-border bg-card p-4">
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Últimos 7 dias
+          </p>
+          <div className="mt-3 flex items-end gap-1.5">
+            {last7.map((d) => {
+              const h = Math.min(60, d.reviewed * 4);
+              return (
+                <div key={d.date} className="flex flex-1 flex-col items-center gap-1">
+                  <div
+                    className="w-full rounded-t bg-gold/70"
+                    style={{ height: `${h}px`, minHeight: "4px" }}
+                    title={`${d.date}: ${d.reviewed} revisões`}
+                  />
+                  <span className="text-[10px] text-muted-foreground">
+                    {d.date.slice(5).replace("-", "/")}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap gap-2">
@@ -152,7 +197,7 @@ function KarteikartenPage() {
               Karte {safeIndex + 1} / {total}
             </span>
             <span
-              className={`rounded-md border px-2 py-0.5 text-xs font-semibold ${levelColor[current.level]}`}
+              className={`rounded-md border px-2 py-0.5 text-xs font-semibold ${LEVEL_COLORS[current.level]}`}
             >
               {current.level}
             </span>
@@ -217,5 +262,73 @@ function KarteikartenPage() {
         </>
       )}
     </main>
+  );
+}
+
+function ReminderSettings({ dueCount: _dueCount }: { dueCount: number }) {
+  const [pref, setPrefState] = useState(() => getPref());
+  const [perm, setPerm] = useState<NotificationPermission | "unsupported">(() =>
+    permissionState(),
+  );
+
+  function update(next: typeof pref) {
+    setPrefState(next);
+    setPref(next);
+  }
+
+  async function toggle(enabled: boolean) {
+    if (enabled) {
+      const result = await requestPermission();
+      setPerm(result);
+      if (result !== "granted") {
+        toast.error(
+          result === "unsupported"
+            ? "Seu navegador não suporta notificações."
+            : "Permissão negada — habilite nas configurações do navegador.",
+        );
+        return;
+      }
+      toast.success("Lembretes diários ativados!");
+    }
+    update({ ...pref, enabled });
+  }
+
+  return (
+    <section className="mt-5 rounded-xl border border-border bg-card p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          {pref.enabled && perm === "granted" ? (
+            <Bell className="h-5 w-5 text-gold" />
+          ) : (
+            <BellOff className="h-5 w-5 text-muted-foreground" />
+          )}
+          <div>
+            <p className="text-sm font-semibold">Tägliche Erinnerung / Lembrete diário</p>
+            <p className="text-xs text-muted-foreground">
+              Notificação no navegador quando houver cartões para revisar.
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <Input
+            type="time"
+            value={pref.time}
+            onChange={(e) => update({ ...pref, time: e.target.value })}
+            className="w-28"
+            disabled={!pref.enabled}
+          />
+          <Switch
+            checked={pref.enabled && perm === "granted"}
+            onCheckedChange={toggle}
+            disabled={perm === "unsupported"}
+          />
+        </div>
+      </div>
+      {perm === "denied" && (
+        <p className="mt-2 text-xs text-destructive">
+          Notificações bloqueadas. Habilite manualmente nas configurações do navegador.
+        </p>
+      )}
+    </section>
   );
 }
