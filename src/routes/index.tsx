@@ -34,22 +34,22 @@ function Index() {
                 "radial-gradient(60% 60% at 50% 0%, oklch(0.78 0.13 86 / 0.25) 0%, transparent 70%)",
             }}
           />
-          <div className="mx-auto max-w-6xl px-4 pb-16 pt-20 sm:pt-28">
+          <div className="mx-auto max-w-6xl px-4 pb-12 pt-12 sm:pb-16 sm:pt-28">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               className="mx-auto max-w-3xl text-center"
             >
-              <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-foreground">
+              <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-foreground sm:text-xs">
                 <Languages className="h-3.5 w-3.5 text-gold" />
-                Goethe-Institut · Mündliche Prüfung
+                <span className="truncate">Goethe-Institut · Mündliche Prüfung</span>
               </span>
-              <h1 className="mt-6 font-display text-5xl font-extrabold leading-[1.05] tracking-tight sm:text-6xl">
+              <h1 className="mt-6 font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
                 {t.landing.hero1}{" "}
                 <span className="text-gold">{t.landing.hero2}</span>
               </h1>
-              <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
+              <p className="mx-auto mt-4 max-w-2xl text-base text-muted-foreground sm:mt-6 sm:text-lg">
                 {t.landing.sub}
               </p>
               <div className="mt-10 flex flex-wrap justify-center gap-3">
