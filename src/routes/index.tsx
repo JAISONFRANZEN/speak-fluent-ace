@@ -97,15 +97,16 @@ function Index() {
           </h2>
           <Button
             size="lg"
-            onClick={() => navigate({ to: "/signup" })}
+            onClick={() => navigate({ to: "/dashboard" })}
             className="mt-8 bg-gold text-gold-foreground hover:bg-gold/90"
           >
             <Award className="mr-2 h-5 w-5" />
-            {t.cta.signup}
+            Começar agora
           </Button>
           <p className="mt-4 text-xs text-muted-foreground">
-            Acesso vitalício · Sem cobrança
+            Acesso livre · Sem cadastro
           </p>
+
         </section>
       </main>
 
