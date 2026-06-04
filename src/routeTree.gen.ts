@@ -13,6 +13,7 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedKarteikartenRouteImport } from './routes/_authenticated/karteikarten'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedExamIndexRouteImport } from './routes/_authenticated/exam.index'
 import { Route as AuthenticatedExamRunRouteImport } from './routes/_authenticated/exam.run'
@@ -37,6 +38,12 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedKarteikartenRoute =
+  AuthenticatedKarteikartenRouteImport.update({
+    id: '/karteikarten',
+    path: '/karteikarten',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -64,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/karteikarten': typeof AuthenticatedKarteikartenRoute
   '/exam/run': typeof AuthenticatedExamRunRoute
   '/exam/': typeof AuthenticatedExamIndexRoute
   '/exam/$sessionId/result': typeof AuthenticatedExamSessionIdResultRoute
@@ -73,6 +81,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/karteikarten': typeof AuthenticatedKarteikartenRoute
   '/exam/run': typeof AuthenticatedExamRunRoute
   '/exam': typeof AuthenticatedExamIndexRoute
   '/exam/$sessionId/result': typeof AuthenticatedExamSessionIdResultRoute
@@ -84,6 +93,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/karteikarten': typeof AuthenticatedKarteikartenRoute
   '/_authenticated/exam/run': typeof AuthenticatedExamRunRoute
   '/_authenticated/exam/': typeof AuthenticatedExamIndexRoute
   '/_authenticated/exam/$sessionId/result': typeof AuthenticatedExamSessionIdResultRoute
@@ -95,6 +105,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/dashboard'
+    | '/karteikarten'
     | '/exam/run'
     | '/exam/'
     | '/exam/$sessionId/result'
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/dashboard'
+    | '/karteikarten'
     | '/exam/run'
     | '/exam'
     | '/exam/$sessionId/result'
@@ -114,6 +126,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/_authenticated/dashboard'
+    | '/_authenticated/karteikarten'
     | '/_authenticated/exam/run'
     | '/_authenticated/exam/'
     | '/_authenticated/exam/$sessionId/result'
@@ -156,6 +169,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/karteikarten': {
+      id: '/_authenticated/karteikarten'
+      path: '/karteikarten'
+      fullPath: '/karteikarten'
+      preLoaderRoute: typeof AuthenticatedKarteikartenRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -189,6 +209,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedKarteikartenRoute: typeof AuthenticatedKarteikartenRoute
   AuthenticatedExamRunRoute: typeof AuthenticatedExamRunRoute
   AuthenticatedExamIndexRoute: typeof AuthenticatedExamIndexRoute
   AuthenticatedExamSessionIdResultRoute: typeof AuthenticatedExamSessionIdResultRoute
@@ -196,6 +217,7 @@ interface AuthenticatedRouteChildren {
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedKarteikartenRoute: AuthenticatedKarteikartenRoute,
   AuthenticatedExamRunRoute: AuthenticatedExamRunRoute,
   AuthenticatedExamIndexRoute: AuthenticatedExamIndexRoute,
   AuthenticatedExamSessionIdResultRoute: AuthenticatedExamSessionIdResultRoute,
@@ -214,12 +236,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}

@@ -31,6 +31,12 @@ export function SiteHeader() {
               >
                 Dashboard
               </Link>
+              <Link
+                to="/karteikarten"
+                className="hidden text-sm font-medium text-muted-foreground hover:text-foreground sm:inline"
+              >
+                Karteikarten
+              </Link>
               <Button
                 variant="ghost"
                 size="sm"
