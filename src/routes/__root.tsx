@@ -1,11 +1,14 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import appCss from "../styles.css?url";
 import { I18nProvider } from "@/i18n/I18nProvider";
 import { AuthProvider } from "@/lib/auth";
 import { Toaster } from "@/components/ui/sonner";
+import { startReminderLoop } from "@/lib/reminders";
+import { dueCards } from "@/lib/srs";
+import { ALL_IDS } from "@/lib/flashcards";
 
 function NotFoundComponent() {
   return (
@@ -79,6 +82,9 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const [queryClient] = useState(() => new QueryClient());
+  useEffect(() => {
+    return startReminderLoop(() => dueCards(ALL_IDS).length);
+  }, []);
   return (
     <QueryClientProvider client={queryClient}>
       <I18nProvider>

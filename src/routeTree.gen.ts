@@ -13,6 +13,7 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedReviewRouteImport } from './routes/_authenticated/review'
 import { Route as AuthenticatedKarteikartenRouteImport } from './routes/_authenticated/karteikarten'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedExamIndexRouteImport } from './routes/_authenticated/exam.index'
@@ -37,6 +38,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedReviewRoute = AuthenticatedReviewRouteImport.update({
+  id: '/review',
+  path: '/review',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedKarteikartenRoute =
   AuthenticatedKarteikartenRouteImport.update({
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/karteikarten': typeof AuthenticatedKarteikartenRoute
+  '/review': typeof AuthenticatedReviewRoute
   '/exam/run': typeof AuthenticatedExamRunRoute
   '/exam/': typeof AuthenticatedExamIndexRoute
   '/exam/$sessionId/result': typeof AuthenticatedExamSessionIdResultRoute
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/karteikarten': typeof AuthenticatedKarteikartenRoute
+  '/review': typeof AuthenticatedReviewRoute
   '/exam/run': typeof AuthenticatedExamRunRoute
   '/exam': typeof AuthenticatedExamIndexRoute
   '/exam/$sessionId/result': typeof AuthenticatedExamSessionIdResultRoute
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/karteikarten': typeof AuthenticatedKarteikartenRoute
+  '/_authenticated/review': typeof AuthenticatedReviewRoute
   '/_authenticated/exam/run': typeof AuthenticatedExamRunRoute
   '/_authenticated/exam/': typeof AuthenticatedExamIndexRoute
   '/_authenticated/exam/$sessionId/result': typeof AuthenticatedExamSessionIdResultRoute
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/dashboard'
     | '/karteikarten'
+    | '/review'
     | '/exam/run'
     | '/exam/'
     | '/exam/$sessionId/result'
@@ -116,6 +126,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/dashboard'
     | '/karteikarten'
+    | '/review'
     | '/exam/run'
     | '/exam'
     | '/exam/$sessionId/result'
@@ -127,6 +138,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/_authenticated/dashboard'
     | '/_authenticated/karteikarten'
+    | '/_authenticated/review'
     | '/_authenticated/exam/run'
     | '/_authenticated/exam/'
     | '/_authenticated/exam/$sessionId/result'
@@ -169,6 +181,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/review': {
+      id: '/_authenticated/review'
+      path: '/review'
+      fullPath: '/review'
+      preLoaderRoute: typeof AuthenticatedReviewRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/karteikarten': {
       id: '/_authenticated/karteikarten'
       path: '/karteikarten'
@@ -210,6 +229,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedKarteikartenRoute: typeof AuthenticatedKarteikartenRoute
+  AuthenticatedReviewRoute: typeof AuthenticatedReviewRoute
   AuthenticatedExamRunRoute: typeof AuthenticatedExamRunRoute
   AuthenticatedExamIndexRoute: typeof AuthenticatedExamIndexRoute
   AuthenticatedExamSessionIdResultRoute: typeof AuthenticatedExamSessionIdResultRoute
@@ -218,6 +238,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedKarteikartenRoute: AuthenticatedKarteikartenRoute,
+  AuthenticatedReviewRoute: AuthenticatedReviewRoute,
   AuthenticatedExamRunRoute: AuthenticatedExamRunRoute,
   AuthenticatedExamIndexRoute: AuthenticatedExamIndexRoute,
   AuthenticatedExamSessionIdResultRoute: AuthenticatedExamSessionIdResultRoute,
