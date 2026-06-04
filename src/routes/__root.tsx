@@ -82,6 +82,9 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const [queryClient] = useState(() => new QueryClient());
+  useEffect(() => {
+    return startReminderLoop(() => dueCards(ALL_IDS).length);
+  }, []);
   return (
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
